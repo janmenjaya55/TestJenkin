@@ -1,0 +1,13 @@
+---
+version: "3.9"
+services:
+  eurekaser:
+    restart: always
+    image: janmenjaya/dockerhubinages:latest
+    container_name: eurekatest
+    ports:
+      - 8001:9001
+networks:
+  default:
+    external:
+      name: customoverlay
