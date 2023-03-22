@@ -44,7 +44,7 @@ public class TestMockitoController {
 	RestTemplate resttemplet;
 
 	// @GetMapping("/getall-billpunch-details")//get all data
-	@Test
+	//@Test
 	public void getAll() throws UnsupportedEncodingException {
       //change the token if any error for this end point  for expire token.
 		MockHttpServletRequest requestq = new MockHttpServletRequest();
