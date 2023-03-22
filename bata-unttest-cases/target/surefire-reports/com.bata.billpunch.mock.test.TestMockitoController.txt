@@ -1,0 +1,9 @@
+-------------------------------------------------------------------------------
+Test set: com.bata.billpunch.mock.test.TestMockitoController
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 3.948 s <<< FAILURE! - in com.bata.billpunch.mock.test.TestMockitoController
+getAll  Time elapsed: 0.002 s  <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'billPunchRestController': Unsatisfied dependency expressed through field 'services'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.bata.billpunch.service.impl.BillPunchServicesImpl' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.bata.billpunch.service.impl.BillPunchServicesImpl' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+
