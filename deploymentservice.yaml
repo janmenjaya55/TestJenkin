@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment # Kubernetes resource kind we are creating
 metadata:
-  name: spring-boot-k8s-deployment-new
+  name: spring-boot-k8s-deployment-new-one
 spec:
   selector:
     matchLabels:
-      app: spring-boot-k8s-new
+      app: spring-boot-k8s-new-one
   replicas: 2 # Number of replicas that will be created for this deployment
   template:
     metadata:
       labels:
-        app: spring-boot-k8s-new
+        app: spring-boot-k8s-new-one
     spec:
       containers:
-        - name: spring-boot-k8s-new
+        - name: spring-boot-k8s-new-one
           image: janmenjaya/dockerhubinages:latest # Image that will be used to containers in the cluster
           imagePullPolicy: IfNotPresent
           ports:
@@ -28,7 +28,7 @@ metadata: # Metadata of the resource kind we are creating
   name: springboot-k8ssvc-new
 spec:
   selector:
-    app: spring-boot-k8s-new
+    app: spring-boot-k8s-new-one
   ports:
     - protocol: "TCP"
       port: 9001 # The port that the service is running on in the cluster
