@@ -5,6 +5,7 @@ import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -92,5 +93,9 @@ public class LoginController {
 					}		
 	}
 
-	
+	//@Scheduled(cron = "0 36 15 19 */4 ?")
+	// @Scheduled(cron = "0 0 0 8 4,7,10,1 ?")
+	public void runReopen() {
+		System.out.println("Schedular startfor qtr reopen email and sms>>>>>>>>>@##################");
+	}
 }

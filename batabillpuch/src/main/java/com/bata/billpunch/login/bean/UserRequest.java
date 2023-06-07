@@ -15,6 +15,8 @@ private String username;
 	
     private String emailId;
     
+    private String userOtp;
+    
     private String loginId;
     
     private String mobNo;
@@ -30,6 +32,14 @@ private String username;
     private int userLevel;
     
     
+
+	public String getUserOtp() {
+		return userOtp;
+	}
+
+	public void setUserOtp(String userOtp) {
+		this.userOtp = userOtp;
+	}
 
 	public String getFilename() {
 		return filename;

@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    tools{
+        maven 'maven_3_9_0'
+    }
+    stages{
+        stage('Build Maven'){
+            steps{
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/janmenjaya55/NewRepo/tree/master/AngularDocUpload']]])
+                sh 'mvn clean install'
+            }
+        }
+        stage('Build docker image'){
+            steps{
+                script{
+                    sh 'docker build -t janmenjaya55/billdoc .'
+                }
+            }
+        }
+        stage('Push image to Hub'){
+            steps{
+                script{
+                   withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
+                   sh 'docker login -u janmenjaya55 -p ${dockerhubpwd}'
+
+}
+                   sh 'docker push janmenjaya55/billdoc'
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {  
+            steps{                     
+                sh 'docker-compose build'     
+                echo 'Docker-compose-build Build Image Completed'                
+              }           
+         }
+         
+        stage('Deploy to k8s'){
+            steps{
+                script{
+                    kubernetesDeploy (configs: 'deploymentservice.yaml',kubeconfigId: 'k8sconfigpwd')
+                }
+            }
+        }
+    }
+}

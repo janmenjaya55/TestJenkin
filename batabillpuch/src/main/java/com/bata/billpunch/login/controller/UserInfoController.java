@@ -2,6 +2,7 @@ package com.bata.billpunch.login.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +22,7 @@ import com.bata.billpunch.login.bean.UserRequest;
 import com.bata.billpunch.login.bean.UserResponse;
 import com.bata.billpunch.login.common.BillPunchConstant;
 import com.bata.billpunch.login.config.JwtTokenUtil;
+import com.bata.billpunch.login.config.SendMail;
 import com.bata.billpunch.login.exception.ValidationException;
 import com.bata.billpunch.login.model.UserModel;
 import com.bata.billpunch.login.repository.UserRepository;
@@ -33,6 +35,9 @@ public class UserInfoController {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	private SendMail sentemail;
 
 	@Autowired
 	private UserRepository userInfoRepository;
@@ -245,16 +250,53 @@ public class UserInfoController {
 
 	@PostMapping("/batabps/user/forgotpassword")
 	public ResponseEntity<ResponseModel> forgotpassword(@RequestBody UserRequest userReq) throws Exception {
-
+		 String ps="";
+		 System.out.println("getUsername>>>>>>" + userReq.getUsername());
+		 System.out.println("getUserOtp>>>>>>" + userReq.getUserOtp());
 		UserModel userModel = userInfoRepository.findByEmailId(userReq.getUsername());
-
-		String ps = jwtTokenUtil.getDecriptPassword(userModel.getPassword());
+      if (userReq.getUserOtp().equalsIgnoreCase(userModel.getUserOtp())) {
+    	 ps = jwtTokenUtil.getDecriptPassword(userModel.getPassword());
+		}else {
+			ps="Wrong user access.";
+		}
+		
 		System.out.println("bnnnnnnnnnnnnnnnnnnnnn" + ps);
 		ResponseModel resp = new ResponseModel();
 
 		resp.setMessage("SUCCESS");
 		resp.setStatus("200");
 		resp.setData(ps);
+
+		return ResponseEntity.ok(resp);
+
+	}
+	
+	
+	@PostMapping("/batabps/user/getotpvalidation")
+	public ResponseEntity<ResponseModel> getotpvalidation(@RequestBody UserRequest userReq) throws Exception {
+
+		UserModel userModel = userInfoRepository.findByEmailId(userReq.getUsername());
+		Random rnd = new Random();
+	    int number = rnd.nextInt(999999);
+		userModel.setUserOtp(String.format("%06d", number));
+		UserModel resultmodel =userInfoRepository.save(userModel);
+		try {
+			sentemail.sentEmail(resultmodel.getEmailId(),resultmodel.getUserOtp());
+		} catch (Exception e) {
+			System.out.println("Exception in sent email"+e);
+		}
+        
+		ResponseModel resp = new ResponseModel();
+if(resultmodel!=null) {
+	resp.setMessage("SUCCESS");
+	resp.setStatus("200");
+	resp.setData(resultmodel);
+}else {
+	resp.setMessage("FAIL");
+	resp.setStatus("300");
+	resp.setData(resultmodel);
+}
+		
 
 		return ResponseEntity.ok(resp);
 

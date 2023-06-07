@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableDiscoveryClient
 @EnableCircuitBreaker
 @EnableHystrixDashboard
+
 public class BatabillpuchApplication {
 
 	public static void main(String[] args) {

@@ -57,6 +57,8 @@ public class UserModel implements Serializable {
     
     private String filename;
     
+    private String userOtp;
+    
     @Nullable
     private int userLevel;
     
@@ -237,6 +239,16 @@ public class UserModel implements Serializable {
 
 	public void setUserLevel(int userLevel) {
 		this.userLevel = userLevel;
+	}
+
+
+	public String getUserOtp() {
+		return userOtp;
+	}
+
+
+	public void setUserOtp(String userOtp) {
+		this.userOtp = userOtp;
 	}
 
 
