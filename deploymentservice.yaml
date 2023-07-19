@@ -1,36 +1,50 @@
 apiVersion: apps/v1
-kind: Deployment # Kubernetes resource kind we are creating
+kind: Deployment
 metadata:
-  name: spring-boot-k8s-deployment-new-two
+  name: eureka
+  labels:
+    app: eureka
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: spring-boot-k8s-new-two
-  replicas: 2 # Number of replicas that will be created for this deployment
+      app: eureka
   template:
     metadata:
       labels:
-        app: spring-boot-k8s-new-two
+        app: eureka
     spec:
       containers:
-        - name: spring-boot-k8s-new-two
-          image: janmenjaya/dockerhubinages:latest # Image that will be used to containers in the cluster
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 9001 # The port that the container is running on in the cluster
-
+      - name: eureka
+        image: janmenjaya/eureka
+        ports:
+        - containerPort: 8001  
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0    
 
 ---
 
-apiVersion: v1 # Kubernetes API version
-kind: Service # Kubernetes resource kind we are creating
-metadata: # Metadata of the resource kind we are creating
-  name: springboot-k8ssvc-new
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: eureka
+  name: eureka
+  namespace: default
 spec:
-  selector:
-    app: spring-boot-k8s-new-two
+  clusterIP: 10.101.156.118
+  clusterIPs:
+  - 10.101.156.118
   ports:
-    - protocol: "TCP"
-      port: 9001 # The port that the service is running on in the cluster
-      targetPort: 9001 # The port exposed by the service
-  type: NodePort # type of the service.
+  - nodePort: 32094
+    port: 8001
+    protocol: TCP
+    targetPort: 8001
+  selector:
+    app: eureka
+  sessionAffinity: None
+  type: NodePort
+
