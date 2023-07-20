@@ -125,22 +125,59 @@ public class BillReportRestController {
 	 * Find All bill punch edp reports
 	 * 
 	 * @throws IOException
+	 * @throws ParseException
 	 ********************************************************************************************/
 	@SuppressWarnings("all")
 	@GetMapping("/get-bill-punch-gst-xl-report-details/{fromdate}/{todate}")
 	public void getGstXlReport(HttpServletRequest req, HttpServletResponse response,
-			@PathVariable("fromdate") String fromdate, @PathVariable("todate") String todate) throws IOException {
+			@PathVariable("fromdate") String fromdateval, @PathVariable("todate") String todateval)
+			throws IOException, ParseException {
 		ResponseModel rs = new ResponseModel();
 		RestTemplate restTemplate = new RestTemplate();
 		TokenRequest request = new TokenRequest();
 		request.setToken(getToken(req));
 		TokenResponse respons = restTemplate.postForEntity(tokenurl, request, TokenResponse.class).getBody();
-		if (!Optional.ofNullable(todate).isPresent()) {
-			todate = "2040-01-01";
+		
+		String toyear = null;
+		String toweek = null;
 
+		String fromyear = null;
+		String fromweek = null;
+
+		String fromdate = fromdateval;
+		String todate = todateval;
+
+		String format = "yyyy-MM-dd";
+
+		SimpleDateFormat df = new SimpleDateFormat(format);
+		Date datefrom = df.parse(fromdate);
+		Date dateto = df.parse(todate);
+
+		Calendar fromcal = Calendar.getInstance();
+		fromcal.setTime(datefrom);
+		int yr = fromcal.get(Calendar.YEAR);
+		int week = fromcal.get(Calendar.WEEK_OF_YEAR);
+
+		Calendar tocal = Calendar.getInstance();
+		tocal.setTime(dateto);
+		int toyr = tocal.get(Calendar.YEAR);
+		int weekto = tocal.get(Calendar.WEEK_OF_YEAR);
+
+		if (!Optional.ofNullable(todate).isPresent()) {
+			toyear = "2040";
+			fromyear = "01";
+		} else {
+
+			toyear = StringUtils.leftPad(String.valueOf(toyr), 4, "0");
+			toweek = StringUtils.leftPad(String.valueOf(weekto), 2, "0");
 		}
 		if (!Optional.ofNullable(fromdate).isPresent()) {
-			fromdate = "2015-01-01";
+			fromyear = "2015";
+			fromweek = "01";
+
+		} else {
+			fromyear = StringUtils.leftPad(String.valueOf(yr), 4, "0");
+			fromweek = StringUtils.leftPad(String.valueOf(week), 2, "0");
 		}
 
 		if (respons.getStatus().contentEquals("True")) {
@@ -159,21 +196,21 @@ public class BillReportRestController {
 				app = null;
 				if (vm.equalsIgnoreCase("8")) {
 
-					xm = services.findAllApprovedDetailsForGstReport(fromdate, todate, "8");
+					xm = services.findAllApprovedDetailsForGstReport(fromyear,fromweek,toyear, toweek, "8");
 					if (!xm.isEmpty()) {
 						app = "APPAREL";
 					}
 
 				} else if (vm.equalsIgnoreCase("9")) {
 
-					xm = services.findAllApprovedDetailsForGstReport(fromdate, todate, "9");
+					xm = services.findAllApprovedDetailsForGstReport(fromyear,fromweek,toyear, toweek,  "9");
 					if (!xm.isEmpty()) {
 						app = "CONTRACT";
 					}
 
 				} else if (vm.equalsIgnoreCase("7")) {
 
-					xm = services.findAllApprovedDetailsForGstReport(fromdate, todate, "7");
+					xm = services.findAllApprovedDetailsForGstReport(fromyear,fromweek,toyear, toweek,  "7");
 					if (!xm.isEmpty()) {
 						app = "SANDAK";
 					}
@@ -502,9 +539,10 @@ public class BillReportRestController {
 			@PathVariable("years") String years) throws IOException {
 		ResponseModel rs = new ResponseModel();
 		RestTemplate restTemplate = new RestTemplate();
-		//TokenRequest request = new TokenRequest();
-		//request.setToken(getToken(req));
-		//TokenResponse respons = restTemplate.postForEntity(tokenurl, request, TokenResponse.class).getBody();
+		// TokenRequest request = new TokenRequest();
+		// request.setToken(getToken(req));
+		// TokenResponse respons = restTemplate.postForEntity(tokenurl, request,
+		// TokenResponse.class).getBody();
 
 		List<Integer> list = new ArrayList<Integer>();
 		list.addAll(Arrays.asList(1, 2, 4, 1, 1, 3, 5, 15, 3, 5, 5, 5, 11, 11, 7, 11, 3, 1, 1, 4, 2, 15, 2, 2, 4, 20,
@@ -630,11 +668,11 @@ public class BillReportRestController {
 											StringUtils.rightPad(vm.getInvoiceNo(), 15, " "), vm.getDistNo(), af1, af2,
 											vm.getPackCaset(), StringUtils.leftPad(vm.getAmtone(), 11, "0"),
 											StringUtils.leftPad(vm.getAmttwo(), 11, "0"), "0000000",
-											StringUtils.leftPad(price, 11, "0"),
-											vm.getPartyCode().substring(2, 5), "1", "9", years, wk, vm.getCnNo(),
-											vm.getDateOne(), vm.getDateTwo(), vm.getDateThree(),
-											StringUtils.leftPad(vm.getTransportCode(), 20, " "), vm.getPermitNo(),
-											vm.getStateCode(), StringUtils.leftPad(vm.getInvAmt(), 11, "0"),
+											StringUtils.leftPad(price, 11, "0"), vm.getPartyCode().substring(2, 5), "1",
+											"9", years, wk, vm.getCnNo(), vm.getDateOne(), vm.getDateTwo(),
+											vm.getDateThree(), StringUtils.leftPad(vm.getTransportCode(), 20, " "),
+											vm.getPermitNo(), vm.getStateCode(),
+											StringUtils.leftPad(vm.getInvAmt(), 11, "0"),
 											StringUtils.rightPad(vm.getGrNo(), 15, " "), vm.getDateTwoOne(),
 											vm.getDateTwoTwo(), vm.getDateTwoThree(), vm.getDateThreeOne(),
 											vm.getDateThreeTwo(), vm.getDateThreeThree(), vm.getResumeInvNO(), "     ",
@@ -1026,7 +1064,7 @@ public class BillReportRestController {
 							List<AdonisWeekMasterModel> wks = adwservice.getAllWeek();
 							for (AdonisWeekMasterModel km : wks) {
 								AdonisFileDetailsInterface add = mservices.getAdonisDetailsweek(vm.getordno(),
-										vm.getinvno(),wk);
+										vm.getinvno(), wk);
 								Date cal = add.getcreatedOn();
 								SimpleDateFormat d11 = new SimpleDateFormat("yyyy-MM-dd");
 								String d2 = d11.format(cal);
@@ -1517,7 +1555,7 @@ public class BillReportRestController {
 				"TO STATE NAME", "TO LOCATION CODE", "RECEVING LOCATION NAME", "DEPT", "REGION", "INVOICE NO",
 				"INVOICE DATE", "GRN NO", "GRN DATE", "BOOKING", "PAIRS", "TAXABLE VALUE", "CGST", "SGST", "IGST",
 				"FREIGHT", "TCS", "NET AMOUNT", "GR NO", "GR DATE", "PO NO", "PO DATE", "VENDOR GST NO", "MRP", "WSP",
-				"RECEIVER GST NO", "NO CLAIM DIST","FORM TYPE"));
+				"RECEIVER GST NO", "NO CLAIM DIST", "FORM TYPE"));
 
 		for (int i = 0; i < list1.size(); i++) {
 			Cell headerCell = headerRow.createCell(i);
@@ -1525,7 +1563,8 @@ public class BillReportRestController {
 		}
 
 	}
-   //added formtype for supply reports from 2023 week onwards.
+
+	// added formtype for supply reports from 2023 week onwards.
 	@SuppressWarnings("all")
 	private void writeDataLines(List<BillPunchSupplyReportModel> result, XSSFSheet sheet) throws SQLException {
 		int rowCount = 1;
@@ -1541,7 +1580,7 @@ public class BillReportRestController {
 					sb.getGrNo(), sb.getGrnDate(), sb.getBooking(), sb.getPairs(), sb.getTaxableValue(), sb.getCgst(),
 					sb.getSgst(), sb.getIgst(), sb.getFreight(), sb.getTcs(), sb.getNetAmount(), sb.getGrnNo(),
 					sb.getGrDate(), sb.getPoNo(), sb.getPoDate(), sb.getVenGstNo(), sb.getMrp(), sb.getWsp(),
-					sb.getReceiverGstNo(), sb.getNoclaim(),sb.getFormtype()));
+					sb.getReceiverGstNo(), sb.getNoclaim(), sb.getFormtype()));
 			for (int i = 0; i < 33; i++) {
 				Cell cell = row.createCell(i);
 				cell.setCellValue(list1.get(i));

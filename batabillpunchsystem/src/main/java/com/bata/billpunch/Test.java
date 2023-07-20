@@ -83,6 +83,10 @@ public class Test {
 		};
 
 		System.out.println(">>>>>>>>>>>>>>>>>>>ts" + sx.sconcat("1", "2"));
+		
+		
+		
+		
 	}
 
 	StringConcatinterface mx = (x, y) -> {

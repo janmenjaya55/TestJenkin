@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zull
+  labels:
+    app: zull
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zull
+  template:
+    metadata:
+      labels:
+        app: zull
+    spec:
+      containers:
+      - name: zull
+        image: janmenjaya/zull
+        ports:
+        - containerPort: 30002  
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0    
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/ip-allocated-from-pool: first-pool
+  labels:
+    app: zull
+  name: zull
+  namespace: default
+spec:
+  allocateLoadBalancerNodePorts: true
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 32095
+    port: 30002
+    protocol: TCP
+    targetPort: 30002
+  selector:
+    app: zull
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.56.242

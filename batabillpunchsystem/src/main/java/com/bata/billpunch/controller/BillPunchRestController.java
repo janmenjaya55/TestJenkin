@@ -3324,13 +3324,13 @@ public class BillPunchRestController {
 		ResponseModel rs = new ResponseModel();
 		RestTemplate restTemplate = new RestTemplate();
 		TokenRequest request = new TokenRequest();
-		// request.setToken(getToken(req));
+		 request.setToken(getToken(req));
 		TokenResponse response = null;
 		BillPunchDetailsModel cm = null;
-		// response = restTemplate.postForEntity(tokenurl, request,
-		// TokenResponse.class).getBody();
+		response = restTemplate.postForEntity(tokenurl, request,
+		 TokenResponse.class).getBody();
 
-		if ("True".contentEquals("True")) {
+		if (response.getStatus().contentEquals("True")) {
 
 			List<BillPunchDetailsModel> m = services.findAllApprovedDetailsForSupplyReportFilternew(
 					entity.getPartyCode(), entity.getInvoiceNO(), entity.getBillOrderNo(),"SUBMITTED");
@@ -3363,13 +3363,13 @@ public class BillPunchRestController {
 		ResponseModel rs = new ResponseModel();
 		RestTemplate restTemplate = new RestTemplate();
 		TokenRequest request = new TokenRequest();
-		// request.setToken(getToken(req));
-		TokenResponse response = null;
+		request.setToken(getToken(req));
+	
 		BillPunchDetailsModel cm = null;
-		// response = restTemplate.postForEntity(tokenurl, request,
-		// TokenResponse.class).getBody();
+		TokenResponse response  = restTemplate.postForEntity(tokenurl, request,
+	 TokenResponse.class).getBody();
 
-		if ("True".contentEquals("True")) {
+		if (response.getStatus().contentEquals("True")) {
 
 			List<BillPunchDetailsModel> m = services.findAllApprovedDetailsForSupplyReportFilternewmanual(
 					entity.getPartyCode(), entity.getInvoiceNO(), entity.getBillOrderNo());
@@ -3405,11 +3405,11 @@ public class BillPunchRestController {
 		ResponseModel rs = new ResponseModel();
 		RestTemplate restTemplate = new RestTemplate();
 		TokenRequest request = new TokenRequest();
-		// request.setToken(getToken(req));
-		// TokenResponse response = restTemplate.postForEntity(tokenurl, request,
-		// TokenResponse.class).getBody();
+		 request.setToken(getToken(req));
+		 TokenResponse response = restTemplate.postForEntity(tokenurl, request,
+		 TokenResponse.class).getBody();
 
-		if ("True".contentEquals("True")) {
+		if (response.getStatus() .contentEquals("True")) {
 			List<BillPunchDetailsModel> cm = services.findAllApprovedDetailsForSupplyReportFilternewold(partycode,
 					invno, orderNo, status, yr, wk, grNo);
 			// BillPunchDetailsModel cm =
@@ -3444,11 +3444,11 @@ public class BillPunchRestController {
 		ResponseModel rs = new ResponseModel();
 		RestTemplate restTemplate = new RestTemplate();
 		TokenRequest request = new TokenRequest();
-		// request.setToken(getToken(req));
-		// TokenResponse response = restTemplate.postForEntity(tokenurl, request,
-		// TokenResponse.class).getBody();
+		 request.setToken(getToken(req));
+		 TokenResponse response = restTemplate.postForEntity(tokenurl, request,
+		 TokenResponse.class).getBody();
 
-		if ("True".contentEquals("True")) {
+		if (response.getStatus() .contentEquals("True")) {
 			List<BillPunchDetailsModel> cm = services.findAllApprovedDetailsForSupplyReportFilternew(partycode, invno,
 					orderNo, status);
 
@@ -3479,11 +3479,11 @@ public class BillPunchRestController {
 		ResponseModel rs = new ResponseModel();
 		RestTemplate restTemplate = new RestTemplate();
 		TokenRequest request = new TokenRequest();
-		// request.setToken(getToken(req));
-		// TokenResponse response = restTemplate.postForEntity(tokenurl, request,
-		// TokenResponse.class).getBody();
+		 request.setToken(getToken(req));
+		 TokenResponse response = restTemplate.postForEntity(tokenurl, request,
+		 TokenResponse.class).getBody();
 
-		if ("True".contentEquals("True")) {
+		if (response.getStatus() .contentEquals("True")) {
 			BillPurchaseCostInterface vm = null;
 			PurchaseCostInterface ch = null;
 			PurchaseCostInterface cs = null;
@@ -3501,7 +3501,7 @@ public class BillPunchRestController {
 					entity.setSgstamt(pm.getSgstamt());
 
 					if (!map1.containsKey(pm.getBillOrderNo())) {
-						// entity.setBillId(pm.getBilId());
+						//entity.setBillId(pm.getBilId());
 						entity.setBillCloseStatus(pm.getBillCloseStatus());
 						entity.setShopName(pm.getShopName());
 						entity.setShopNo(pm.getRdcCode());
@@ -3615,14 +3615,15 @@ public class BillPunchRestController {
 	@GetMapping("/getall-billpunch-details-oneee")
 	public ResponseEntity<ResponseModel> getAllOnetest(HttpServletRequest req) {
 
+		
 		ResponseModel rs = new ResponseModel();
 		RestTemplate restTemplate = new RestTemplate();
 		TokenRequest request = new TokenRequest();
-		// request.setToken(getToken(req));
-		// TokenResponse response = restTemplate.postForEntity(tokenurl, request,
-		// TokenResponse.class).getBody();
+		 request.setToken(getToken(req));
+		 TokenResponse response = restTemplate.postForEntity(tokenurl, request,
+		 TokenResponse.class).getBody();
 
-		if ("True".contentEquals("True")) {
+		if (response.getStatus() .contentEquals("True")) {
 			// BillPunchDetailsModel cm = services.getAll().get(0);
 
 			if (true) {
@@ -3651,9 +3652,11 @@ public class BillPunchRestController {
 		ResponseModel rs = new ResponseModel();
 		RestTemplate restTemplate = new RestTemplate();
 		TokenRequest request = new TokenRequest();
-		// request.setToken(getToken(req));
-		// TokenResponse response = restTemplate.postForEntity(tokenurl, request,
-		// TokenResponse.class).getBody();
+		 request.setToken(getToken(req));
+		 TokenResponse response = restTemplate.postForEntity(tokenurl, request,
+		 TokenResponse.class).getBody();
+
+		
 		String fyear = "null";
 		String year1 = null;
 		String year2 = null;
@@ -3671,7 +3674,7 @@ public class BillPunchRestController {
 			year2 = y2 + "-03-31";
 		}
 
-		if ("True".contentEquals("True")) {
+		if (response.getStatus() .contentEquals("True")) {
 			List<ChartsInterface> cm = services.getAllCharts(year1, year2);
 
 			if (!cm.isEmpty()) {
@@ -3701,9 +3704,11 @@ public class BillPunchRestController {
 		ResponseModel rs = new ResponseModel();
 		RestTemplate restTemplate = new RestTemplate();
 		TokenRequest request = new TokenRequest();
-		// request.setToken(getToken(req));
-		// TokenResponse response = restTemplate.postForEntity(tokenurl, request,
-		// TokenResponse.class).getBody();
+		 request.setToken(getToken(req));
+		 TokenResponse response = restTemplate.postForEntity(tokenurl, request,
+		 TokenResponse.class).getBody();
+
+		
 
 		String year1 = null;
 		String year2 = null;
@@ -3721,7 +3726,7 @@ public class BillPunchRestController {
 			year2 = y2 + "-03-31";
 		}
 
-		if ("True".contentEquals("True")) {
+		if (response.getStatus() .contentEquals("True")) {
 			List<ChartsInterface> cm = services.getAllCharts(year1, year2);
 
 			if (!cm.isEmpty()) {

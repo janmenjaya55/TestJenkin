@@ -2,6 +2,7 @@ package com.bata.billpunch.login.config;
 
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Properties;
 
 import org.springframework.stereotype.Component;
@@ -16,7 +17,9 @@ import jakarta.mail.internet.MimeMessage;
 
 
 @Component
-public class SendMail {
+public class SendMail implements Serializable {
+
+    private static final long serialVersionUID = -2550185165626007488L;
 
     public  void sentEmail(String email,String otp) throws IOException {
     // go to security on gmail turn on 2 stepm verification and generate app password and paste over real password 

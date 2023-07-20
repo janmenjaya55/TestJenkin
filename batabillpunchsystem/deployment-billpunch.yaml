@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billpunch
+  labels:
+    app: billpunch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: billpunch
+  template:
+    metadata:
+      labels:
+        app: billpunch
+    spec:
+      containers:
+      - name: billpunch
+        image: janmenjaya/billpunch
+        ports:
+        - containerPort: 30004
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: billpunch
+  name: billpunch
+  namespace: default
+spec:
+  clusterIP: 10.101.156.121
+  clusterIPs:
+  - 10.101.156.121
+  ports:
+  - nodePort: 32097
+    port: 30004
+    protocol: TCP
+    targetPort: 30004
+  selector:
+    app: billpunch
+  sessionAffinity: None
+  type: NodePort
+

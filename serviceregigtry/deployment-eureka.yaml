@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eureka
+  labels:
+    app: eureka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka
+  template:
+    metadata:
+      labels:
+        app: eureka
+    spec:
+      containers:
+      - name: eureka
+        image: janmenjaya/eureka
+        ports:
+        - containerPort: 30001  
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0    
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: eureka
+  name: eureka
+  namespace: default
+spec:
+  clusterIP: 10.101.156.118
+  clusterIPs:
+  - 10.101.156.118
+  ports:
+  - nodePort: 32094
+    port: 30001
+    protocol: TCP
+    targetPort: 30001
+  selector:
+    app: eureka
+  sessionAffinity: None
+  type: NodePort
+

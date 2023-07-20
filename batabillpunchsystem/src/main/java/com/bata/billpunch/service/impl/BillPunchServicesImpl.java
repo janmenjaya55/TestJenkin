@@ -554,10 +554,10 @@ public class BillPunchServicesImpl {
 		return bdao.findWithAllApprovedForGst(wk, yr);
 	}
 
-	public List<BillPunchGstReportModel> findAllApprovedDetailsForGstReport(String fromdate, String todate,
-			String partycode) {
+	public List<BillPunchGstReportModel> findAllApprovedDetailsForGstReport(String fromyear, String fromweek,
+			String toyear, String toweek, String partycode) {
 
-		return gdao.findWithBillReportByWeekGst(partycode, fromdate, todate);
+		return gdao.findWithBillReportByWeekGst(partycode, fromyear, fromweek, toyear, toweek);
 	}
 
 	public List<BillPunchDetailsModel> updatePurchaseCostDetails(String invno, String ordno) {
@@ -920,8 +920,7 @@ public class BillPunchServicesImpl {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>" + status + ">>>>>>>>>>>>>>>>" + orderNo);
 		return bdao.findWithAllApprovedForSupplyReportFilternewOne(partycode, invno, orderNo, status);
 	}
-	
-	
+
 	public List<BillPunchDetailsModel> findAllApprovedDetailsForSupplyReportFilternewTWO(String partycode, String invno,
 			String orderNo) {
 
@@ -929,34 +928,31 @@ public class BillPunchServicesImpl {
 			orderNo = "%";
 		}
 
-	
-
 		System.out.println(">>>>>>>>>>>>>>>>>>>> + " + orderNo);
 		return bdao.findWithAllApprovedForSupplyReportFilternewTWO(partycode, invno, orderNo);
 	}
-	
-	public List<BillPunchDetailsModel> getDetailsByFilterHistoryone(String invoiceNO, String partyCode, String billOrderNo,
-			 String status) {
+
+	public List<BillPunchDetailsModel> getDetailsByFilterHistoryone(String invoiceNO, String partyCode,
+			String billOrderNo, String status) {
 
 		return bdao.findWithBillNoHistoryOne(invoiceNO, partyCode, billOrderNo, status);
 
 	}
-	
-	public List<BillPunchDetailsModel> findAllApprovedDetailsForSupplyReportFilternewmanual(String partycode, String invno,
-			String orderNo) {
+
+	public List<BillPunchDetailsModel> findAllApprovedDetailsForSupplyReportFilternewmanual(String partycode,
+			String invno, String orderNo) {
 
 		if ("null".equalsIgnoreCase(orderNo)) {
 			orderNo = "%";
 		}
 
-	
 		return bdao.findWithAllApprovedForSupplyReportFilternewmanual(partycode, invno, orderNo);
 	}
 
-
 	public List<BillPunchDetailsModel> findAllApprovedDetailsForSupplyReportFilternewold(String partycode, String invno,
 			String orderNo, String status, String yr, String wk, String grNo) {
-		System.out.println("status>>>>>>>>>>>>>>>>>>>>"+status+"ZZZZZZZZZZZZZZ"+orderNo+"CCCCCCCCCCCCCCC"+partycode+"VVVVVVVVVVVV"+invno);
+		System.out.println("status>>>>>>>>>>>>>>>>>>>>" + status + "ZZZZZZZZZZZZZZ" + orderNo + "CCCCCCCCCCCCCCC"
+				+ partycode + "VVVVVVVVVVVV" + invno);
 		if ("null".equalsIgnoreCase(orderNo)) {
 			orderNo = "%";
 		}
@@ -964,7 +960,7 @@ public class BillPunchServicesImpl {
 		if ("null".equalsIgnoreCase(status)) {
 			status = "%";
 		}
-		
+
 		if ("null".equalsIgnoreCase(yr)) {
 			yr = "%";
 		}
@@ -982,8 +978,9 @@ public class BillPunchServicesImpl {
 			partycode = "%";
 		}
 
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>" + status + ">>>>>>>>>>>>>>>>" + orderNo);
-		return bdao.findWithAllApprovedForSupplyReportFilternew(partycode, invno, orderNo, status,wk,yr,grNo);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>" + status + ">>>>>>>>>>>>>>>>" + orderNo + ">>>>>>>>>>>>>>" + wk
+				+ ">>>>>>>>>>>>>>>>" + yr);
+		return bdao.findWithAllApprovedForSupplyReportFilternew(partycode, invno, orderNo, status, wk, yr, grNo);
 	}
 
 }

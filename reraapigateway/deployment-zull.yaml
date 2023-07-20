@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zull
+  labels:
+    app: zull
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zull
+  template:
+    metadata:
+      labels:
+        app: zull
+    spec:
+      containers:
+      - name: zull
+        image: janmenjaya/zull
+        ports:
+        - containerPort: 30002
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: zull
+  name: zull
+  namespace: default
+spec:
+  clusterIP: 10.101.156.119
+  clusterIPs:
+  - 10.101.156.119
+  ports:
+  - nodePort: 32095
+    port: 30002
+    protocol: TCP
+    targetPort: 30002
+  selector:
+    app: zull
+  sessionAffinity: None
+  type: NodePort
+
